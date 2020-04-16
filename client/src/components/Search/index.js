@@ -1,8 +1,8 @@
 import React from 'react'
 
-function Search() {
+function Search(props) {
   return (
-    <div class="card text-white bg-secondary mb-3">
+    <div className="card text-white bg-secondary mb-3">
       <div className="card-body"> 
         <div className="form-group">
           <form>
@@ -12,6 +12,8 @@ function Search() {
                 Search for a book
             </label>
             <input 
+              value={props.bookSearch}
+              onChange={props.handleInputChange}
               id="searchInput" 
               type="text" 
               className="form-control form-control-lg"
@@ -19,7 +21,8 @@ function Search() {
             />
             <button 
               className="btn btn-info mt-3"
-              type="submit">
+              type="submit"
+              onClick={props.handleFormSubmit}>
                 Search
             </button>
           </form>

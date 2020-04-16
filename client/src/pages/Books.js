@@ -8,54 +8,58 @@ import API from "../utils/API";
 function Books() {
   // Setting our component's initial state
   const [books, setBooks] = useState([])
-  const [formObject, setFormObject] = useState({})
+  const [bookSearch, setBookSearch] = useState('')
+  const [url, setUrl] = useState('')
+  const [title, setTitle] = useState('')
 
   // Load all books and store them with setBooks
   useEffect(() => {
-    loadBooks()
-  }, [])
+    if (!bookSearch) {
+      return
+    }
+    loadBooks(bookSearch)
+  }, [bookSearch])
 
   // Loads all books and sets them to books
-  function loadBooks() {
-    API.getBooks()
-      .then(res => 
+  function loadBooks(query) {
+    API.getBooks(query)
+      .then(res => {
+        // Checking to see if any data comes back
+        if (res.data.length === 0) {
+          throw new Error('No results found.')
+        }
+        // checking for an error message
+        if (res.data.status === 'error') {
+          throw new Error(res.data.message)
+        }
         setBooks(res.data)
-      )
+        
+      })
       .catch(err => console.log(err));
   };
 
-  // Deletes a book from the database with a given id, then reloads books from the db
-  function deleteBook(id) {
-    API.deleteBook(id)
-      .then(res => loadBooks())
-      .catch(err => console.log(err));
-  }
-
   // Handles updating component state when the user types into the input field
   function handleInputChange(event) {
-    const { name, value } = event.target;
-    setFormObject({...formObject, [name]: value})
+    // Destructure the name and value properties off of event.target
+    // Update the appropriate state
+    setBookSearch(event.target.value.trim());
   };
 
   // When the form is submitted, use the API.saveBook method to save the book data
   // Then reload books from the database
   function handleFormSubmit(event) {
     event.preventDefault();
-    if (formObject.title && formObject.author) {
-      API.saveBook({
-        title: formObject.title,
-        author: formObject.author,
-        synopsis: formObject.synopsis
-      })
-        .then(res => loadBooks())
-        .catch(err => console.log(err));
-    }
+    console.log(loadBooks(bookSearch))
   };
 
     return (
       <main className="container mt-3">
         <Jumbotron />
-        <Search />
+        <Search 
+          results={bookSearch}
+          handleInputChange={handleInputChange}
+          handleFormSubmit={handleFormSubmit}
+        />
         <Results />
       </main>
     );

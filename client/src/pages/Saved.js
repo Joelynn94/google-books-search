@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import Results from '../components/Results'
 import API from "../utils/API";
 
 function Detail(props) {
@@ -16,7 +17,7 @@ function Detail(props) {
 
   return (
       <div>
-
+        <Results />
       </div>
     );
   }

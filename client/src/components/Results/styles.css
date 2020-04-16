@@ -1,0 +1,7 @@
+.card-result {
+  display: grid !important;
+  grid-template-columns: 100px 2fr;
+}
+.card-img {
+  padding: 1.25rem;
+}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Jumbotron from '../components/Jumbotron'
 import Search from '../components/Search'
+import Results from '../components/Results'
 import API from "../utils/API";
 
 
@@ -55,6 +56,7 @@ function Books() {
       <main className="container mt-3">
         <Jumbotron />
         <Search />
+        <Results />
       </main>
     );
   }

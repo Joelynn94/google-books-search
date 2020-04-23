@@ -15,8 +15,8 @@ function Navbar() {
       <ul className="navbar-nav mr-auto">
         <li className="nav-item">
           <Link 
-            className={location.pathname === "/search" ? "nav-link active" : "nav-link"}
-            to="/search">
+            className={location.pathname === "/" ? "nav-link active" : "nav-link"}
+            to="/">
               Search
           </Link>
         </li>

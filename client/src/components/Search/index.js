@@ -5,7 +5,7 @@ function Search(props) {
     <div className="card text-white bg-secondary mb-3">
       <div className="card-body"> 
         <div className="form-group">
-          <form>
+          <form onClick={props.handleFormSubmit}>>
             <label 
               htmlFor="searchInput"
               className="col-form-label col-form-label-lg">
@@ -21,8 +21,7 @@ function Search(props) {
             />
             <button 
               className="btn btn-info mt-3"
-              type="submit"
-              onClick={props.handleFormSubmit}>
+              type="submit">
                 Search
             </button>
           </form>

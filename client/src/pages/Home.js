@@ -5,38 +5,10 @@ import Results from '../components/Results'
 import API from "../utils/API";
 
 
-function Books() {
+function Home() {
   // Setting our component's initial state
-  const [books, setBooks] = useState([])
   const [bookSearch, setBookSearch] = useState('')
-  const [url, setUrl] = useState('')
-  const [title, setTitle] = useState('')
-
-  // Load all books and store them with setBooks
-  useEffect(() => {
-    if (!bookSearch) {
-      return
-    }
-    loadBooks(bookSearch)
-  }, [bookSearch])
-
-  // Loads all books and sets them to books
-  function loadBooks(query) {
-    API.getBooks(query)
-      .then(res => {
-        // Checking to see if any data comes back
-        if (res.data.length === 0) {
-          throw new Error('No results found.')
-        }
-        // checking for an error message
-        if (res.data.status === 'error') {
-          throw new Error(res.data.message)
-        }
-        setBooks(res.data)
-        
-      })
-      .catch(err => console.log(err));
-  };
+  const [books, setBooks] = useState([])
 
   // Handles updating component state when the user types into the input field
   function handleInputChange(event) {
@@ -49,7 +21,22 @@ function Books() {
   // Then reload books from the database
   function handleFormSubmit(event) {
     event.preventDefault();
-    console.log(loadBooks(bookSearch))
+
+    // Loads all books and sets them to books
+    API.getGoogleSearchBook(bookSearch)
+    .then(res => {
+      // Checking to see if any data comes back
+      if (res.data.length === 0) {
+        throw new Error('No results found.')
+      }
+      // checking for an error message
+      if (res.data.status === 'error') {
+        throw new Error(res.data.message)
+      }
+      setBooks(res.data)
+      
+    })
+    .catch(err => console.log(err));
   };
 
     return (
@@ -66,4 +53,4 @@ function Books() {
   }
 
 
-export default Books;
+export default Home;

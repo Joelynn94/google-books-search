@@ -13,7 +13,6 @@ function Results() {
           <h3 className="card-title">Card title</h3>
           <p className="card-text">Some results here</p>
 
-          <button className="btn btn-primary">View</button>
           <button className="btn btn-success">Save</button>
         </div>
       </div>

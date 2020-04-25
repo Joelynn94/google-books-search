@@ -17,11 +17,7 @@ function Home() {
     setBookSearch(event.target.value.trim());
   };
 
-  // When the form is submitted, use the API.saveBook method to save the book data
-  // Then reload books from the database
-  function handleFormSubmit(event) {
-    event.preventDefault();
-
+  function getBooks(bookSearch) {
     // Loads all books and sets them to books
     API.getGoogleSearchBook(bookSearch)
     .then(res => {
@@ -36,18 +32,52 @@ function Home() {
       setBooks(res.data)
       
     })
+    setBooks(res.data)
     .catch(err => console.log(err));
+  }
+
+  // When the form is submitted, use the API.saveBook method to save the book data
+  // Then reload books from the database
+  function handleFormSubmit(event) {
+    event.preventDefault();
+    getBooks()
   };
+
+  function handleBookSave () {
+    API.saveBook({
+      id: res.data,
+      title: res.data.volumeInfo.title,
+      authors: res.data.volumeInfo.authors,
+      description: res.data.volumeInfo.description,
+      link: res.data.volumeInfo.previewLink,
+      img: res.data.volumeInfo.imageLinks.thumbnail
+    })
+    .then(res => {
+      getBooks(res)
+    })
+    .catch(err => console.log(err));
+  }
 
     return (
       <main className="container mt-3">
         <Jumbotron />
         <Search 
-          results={bookSearch}
           handleInputChange={handleInputChange}
           handleFormSubmit={handleFormSubmit}
         />
-        <Results />
+
+        {books.map(book => (
+          <Results 
+            key={book.id}
+            title={book.volumeInfo.title}
+            authors={book.volumeInfo.authors.join(', ')}
+            description={book.volumeInfo.description}
+            link={book.volumeInfo.previewLink}
+            image={book.volumeInfo.imageLinks.thumbnail}
+            onClick={() => handleBookSave(book.id)}
+          />
+        ))}
+
       </main>
     );
   }

@@ -5,14 +5,14 @@ function Search(props) {
     <div className="card text-white bg-secondary mb-3">
       <div className="card-body"> 
         <div className="form-group">
-          <form onClick={props.handleFormSubmit}>>
+          <form onClick={props.handleFormSubmit}>
             <label 
               htmlFor="searchInput"
               className="col-form-label col-form-label-lg">
                 Search for a book
             </label>
             <input 
-              value={props.bookSearch}
+              value={props.searchBook}
               onChange={props.handleInputChange}
               id="searchInput" 
               type="text" 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Jumbotron from '../components/Jumbotron'
 import Search from '../components/Search'
 import Results from '../components/Results'
@@ -6,77 +6,47 @@ import API from "../utils/API";
 
 
 function Home() {
-  // Setting our component's initial state
-  const [bookSearch, setBookSearch] = useState('')
-  const [books, setBooks] = useState([])
+  const [ searchBook, setSearchBook ] = useState('')
+  const [ books, setBooks ] = useState([])
 
-  // Handles updating component state when the user types into the input field
-  function handleInputChange(event) {
+  const handleInputChange = event => {
     // Destructure the name and value properties off of event.target
     // Update the appropriate state
-    setBookSearch(event.target.value.trim());
+    const { value } = event.target;
+    setSearchBook(value);
   };
 
-  function getBooks(bookSearch) {
-    // Loads all books and sets them to books
-    API.getGoogleSearchBook(bookSearch)
-    .then(res => {
-      // Checking to see if any data comes back
-      if (res.data.length === 0) {
-        throw new Error('No results found.')
-      }
-      // checking for an error message
-      if (res.data.status === 'error') {
-        throw new Error(res.data.message)
-      }
-      setBooks(res.data)
-      
-    })
-    setBooks(res.data)
-    .catch(err => console.log(err));
-  }
-
-  // When the form is submitted, use the API.saveBook method to save the book data
-  // Then reload books from the database
-  function handleFormSubmit(event) {
+  const handleFormSubmit = event => {
+    // When the form is submitted, prevent its default behavior, get recipes update the recipes state
     event.preventDefault();
-    getBooks()
+    API.searchBooks(searchBook)
+      .then(res => setBooks(res.data))
+      .catch(err => console.log(err));
   };
-
-  function handleBookSave () {
-    API.saveBook({
-      id: res.data,
-      title: res.data.volumeInfo.title,
-      authors: res.data.volumeInfo.authors,
-      description: res.data.volumeInfo.description,
-      link: res.data.volumeInfo.previewLink,
-      img: res.data.volumeInfo.imageLinks.thumbnail
-    })
-    .then(res => {
-      getBooks(res)
-    })
-    .catch(err => console.log(err));
-  }
 
     return (
       <main className="container mt-3">
         <Jumbotron />
         <Search 
+          name="BookSearch"
+          value={searchBook}
           handleInputChange={handleInputChange}
           handleFormSubmit={handleFormSubmit}
         />
+        {books.map(book => {
+          return (
+            <Results 
+              key={book.id}
+              title={book.volumeInfo.title}
+              authors={book.volumeInfo.authors}
+              description={book.volumeInfo.description}
+              link={book.volumeInfo.previewLink}
+              image={book.volumeInfo.imageLinks.thumbnail}
+            />
+          )
 
-        {books.map(book => (
-          <Results 
-            key={book.id}
-            title={book.volumeInfo.title}
-            authors={book.volumeInfo.authors.join(', ')}
-            description={book.volumeInfo.description}
-            link={book.volumeInfo.previewLink}
-            image={book.volumeInfo.imageLinks.thumbnail}
-            onClick={() => handleBookSave(book.id)}
-          />
-        ))}
+        })}
+
 
       </main>
     );

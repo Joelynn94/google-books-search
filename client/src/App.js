@@ -1,9 +1,9 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Home from "./pages/Home";
-import Saved from "./pages/Saved";
-import NoMatch from "./pages/NoMatch";
-import Navbar from "./components/Navbar";
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Home from './pages/Home';
+import Saved from './pages/Saved';
+import NoMatch from './pages/NoMatch';
+import Navbar from './components/Navbar';
 
 function App() {
   return (
@@ -11,15 +11,9 @@ function App() {
       <div>
         <Navbar />
         <Switch>
-          <Route exact path={["/", "/books"]}>
-            <Home />
-          </Route>
-          <Route exact path="/books/:id">
-            <Saved />
-          </Route>
-          <Route>
-            <NoMatch />
-          </Route>
+          <Route exact path={['/', '/books']} component={Home} />
+          <Route exact path='/books/:id' component={Saved} />
+          <Route component={NoMatch} />
         </Switch>
       </div>
     </Router>

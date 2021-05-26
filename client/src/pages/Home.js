@@ -1,56 +1,64 @@
-import React, { useState } from "react";
-import Jumbotron from '../components/Jumbotron'
-import Search from '../components/Search'
-import Results from '../components/Results'
-import API from "../utils/API";
-
+import React, { useState } from 'react';
+import Jumbotron from '../components/Jumbotron';
+import Search from '../components/Search';
+import Results from '../components/Results';
+import API from '../utils/API';
 
 function Home() {
-  const [ searchBook, setSearchBook ] = useState('')
-  const [ books, setBooks ] = useState([])
+  const [searchBook, setSearchBook] = useState('');
+  const [books, setBooks] = useState([]);
 
-  const handleInputChange = event => {
-    // Destructure the name and value properties off of event.target
-    // Update the appropriate state
-    const { value } = event.target;
-    setSearchBook(value);
+  const handleInputChange = (e) => {
+    setSearchBook(e.target.value);
   };
 
-  const handleFormSubmit = event => {
-    // When the form is submitted, prevent its default behavior, get recipes update the recipes state
+  const handleFormSubmit = (event) => {
+    // When the form is submitted, prevent its default behavior, get books and update books state
     event.preventDefault();
     API.searchBooks(searchBook)
-      .then(res => setBooks(res.data))
-      .catch(err => console.log(err));
+      .then((res) => setBooks(res.data))
+      .catch((err) => console.log(err));
   };
 
-    return (
-      <main className="container mt-3">
-        <Jumbotron />
-        <Search 
-          name="BookSearch"
-          value={searchBook}
-          handleInputChange={handleInputChange}
-          handleFormSubmit={handleFormSubmit}
-        />
-        {books.map(book => {
+  const handleBookSave = (id) => {
+    const book = books.find((book) => book.id === id);
+
+    API.saveBook({
+      googleId: book.id,
+      title: book.volumeInfo.title,
+      subtitle: book.volumeInfo.subtitle,
+      link: book.volumeInfo.infoLink,
+      authors: book.volumeInfo.authors,
+      description: book.volumeInfo.description,
+      image: book.volumeInfo.imageLinks.thumbnail,
+    }).then(() => API.searchBooks());
+  };
+
+  return (
+    <main className='container mt-3'>
+      <Jumbotron />
+      <Search
+        name='search'
+        value={searchBook}
+        onInputChange={handleInputChange}
+        onFormSubmit={handleFormSubmit}
+      />
+      {books &&
+        books.map((book) => {
           return (
-            <Results 
+            <Results
               key={book.id}
               title={book.volumeInfo.title}
               authors={book.volumeInfo.authors}
               description={book.volumeInfo.description}
               link={book.volumeInfo.previewLink}
               image={book.volumeInfo.imageLinks.thumbnail}
+              onBookSave={() => handleBookSave(book.id)}
             />
-          )
-
+          );
         })}
-
-
-      </main>
-    );
-  }
-
+    </main>
+  );
+}
 
 export default Home;
